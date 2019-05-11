@@ -89,9 +89,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @objc func click(_ sender: NSStatusBarButton){
         let event = NSApp.currentEvent!
         if event.type == NSEvent.EventType.rightMouseUp {
-            
+            let openFileDialog = NSOpenPanel()
+            openFileDialog.canChooseDirectories = false
+            openFileDialog.canChooseFiles = true
+            openFileDialog.canCreateDirectories = false
+            openFileDialog.allowsMultipleSelection = false
+            let result = openFileDialog.runModal()
+            if result.rawValue == NSApplication.ModalResponse.OK.rawValue {
+                self.fileURL = openFileDialog.url
+            } else if result.rawValue == NSApplication.ModalResponse.cancel.rawValue {
+                NSApplication.shared.terminate(self)
+            }
+            self.formatter.dateFormat = "yyyy-MM-dd' 'HH:mm:ss"
         } else {
-            
             if(self.running){
                 self.stopTimer()
             }else{
